@@ -206,11 +206,11 @@ enum {
 #define POW_2_19_MINUS_1	BIT_MASK(19)
 
 /* Needed because the values are referenced by pointer. */
-static const uint8_t REG_ADDR_MEAS_CFG = IFX_DPS310_REG_ADDR_MEAS_CFG;
-static const uint8_t REG_ADDR_CALIB_COEFF_0 = IFX_DPS310_REG_ADDR_COEF_0;
-static const uint8_t REG_ADDR_TMP_B2 = IFX_DPS310_REG_ADDR_TMP_B2;
-static const uint8_t REG_ADDR_PSR_B2 = IFX_DPS310_REG_ADDR_PSR_B2;
-static const uint8_t REG_ADDR_COEF_SRCE = IFX_DPS310_REG_ADDR_COEF_SRCE;
+static uint8_t REG_ADDR_MEAS_CFG = IFX_DPS310_REG_ADDR_MEAS_CFG;
+static uint8_t REG_ADDR_CALIB_COEFF_0 = IFX_DPS310_REG_ADDR_COEF_0;
+static uint8_t REG_ADDR_TMP_B2 = IFX_DPS310_REG_ADDR_TMP_B2;
+static uint8_t REG_ADDR_PSR_B2 = IFX_DPS310_REG_ADDR_PSR_B2;
+static uint8_t REG_ADDR_COEF_SRCE = IFX_DPS310_REG_ADDR_COEF_SRCE;
 
 /* calibration coefficients */
 struct dps310_cal_coeff {
@@ -318,7 +318,7 @@ static bool dps310_trigger_temperature(struct dps310_data *data,
 				       const struct dps310_cfg *config)
 {
 	/* command to start temperature measurement */
-	static const uint8_t tmp_meas_cmd[] = {
+	uint8_t tmp_meas_cmd[] = {
 		IFX_DPS310_REG_ADDR_MEAS_CFG,
 		IFX_DPS310_MODE_COMMAND_TEMPERATURE
 	};
@@ -348,7 +348,7 @@ static bool dps310_trigger_pressure(struct dps310_data *data,
 				    const struct dps310_cfg *config)
 {
 	/* command to start pressure measurement */
-	static const uint8_t psr_meas_cmd[] = {
+	uint8_t psr_meas_cmd[] = {
 		IFX_DPS310_REG_ADDR_MEAS_CFG,
 		IFX_DPS310_MODE_COMMAND_PRESSURE
 	};
@@ -382,7 +382,7 @@ static void dps310_hw_bug_fix(struct dps310_data *data,
 			      const struct dps310_cfg *config)
 {
 	/* setup the necessary 5 sequences to fix the hw bug */
-	static const uint8_t hw_bug_fix_sequence[HW_BUG_FIX_SEQUENCE_LEN][2] = {
+	uint8_t hw_bug_fix_sequence[HW_BUG_FIX_SEQUENCE_LEN][2] = {
 		/*
 		 * First write valid signature on 0x0e and 0x0f
 		 * to unlock address 0x62
@@ -609,7 +609,7 @@ static int dps310_init(const struct device *dev)
 	uint8_t raw_coef[18] = { 0 };
 
 	res = i2c_write_read(data->i2c_master, config->i2c_addr,
-			     &REG_ADDR_CALIB_COEFF_0, 1, &raw_coef, 18);
+			     &REG_ADDR_CALIB_COEFF_0, 1, raw_coef, 18);
 	if (res < 0) {
 		LOG_WRN("I2C error: %d", res);
 		return -EIO;
